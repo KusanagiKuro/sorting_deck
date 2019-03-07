@@ -1,0 +1,46 @@
+Bubble Sort:
+- Create the list
+- Highlight which numbers are being compared
+- Compare
+- Swap if needed
+- Indicate which numbers have been sorted
+
+
+
+Insertion Sort:
+- Create the list
+- Split the list into sorted and unsorted sublists (default sorted sublist start at 1st element)
+- Repeat till unsorted sublist is empty:
+  + Pick its first element
+  + Compare the first element with the sorted sublist's elements (starting from the last element and move backward)
+  + If the element in the sorted sublist is greater, advance its index by one
+  + Else end the comparition
+  + Highlight the sorted sublist
+
+
+
+Merge Sort:
+- Create the list
+- Split the list into halves, then split the left half into halves, continue this step until you reach a size-1 sublist
+- Start to merge the left-most sublist with its right brother by these steps:
+  + Select the minimum value of each list (excluding already added values), compare them, append the less value to the mother list
+  + Repeat until one list is empty, add the remaining value of the other list to the mother list
+- Repeat the previous step.
+
+
+
+Quick Sort: (incomplete)
+- Create the list
+- Highlight pivot
+- Highlight the left and right marker
+- Start moving left and right marker by comparing their values with the pivot
+
+
+
+Common features:
+- Create list
+- Highlight the number
+- Swap element inside list
+- Move element from a list to another list
+- Compare two elements
+- Split list into sublists
