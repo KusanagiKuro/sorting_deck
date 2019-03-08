@@ -4,10 +4,9 @@ import pyglet
 from math import floor
 from pyglet import text, image, resource, sprite
 from pyglet.window import Window, key
-from utility import *
 from window import *
 from cell import *
-from celllist import *
+from cellgroup import *
 
 
 def cellSwap(cell1, cell2):

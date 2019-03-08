@@ -2,8 +2,6 @@
 import os
 import pyglet
 from pyglet import text, image, resource, sprite
-from pyglet.window import Window, key
-from utility import *
 from cell import *
 
 
@@ -32,7 +30,7 @@ class CellGroup:
         self.vectorY = 0
 
         # Create the cells.
-        indent = len(self.lst) / 2
+        indent = len(lst) / 2
         stringList = [str(integer) for integer in lst]
         maxsize = CellGroup.sizeDict.get(len(max(stringList, key=len)), 8)
         self.cells = [Cell(integer,
@@ -41,7 +39,7 @@ class CellGroup:
                            maxsize,
                            index)
                       for index, integer in enumerate(lst)]
-        for index, integer in enumerate(self.lst):
+        for index, integer in enumerate(lst):
             cell = Cell(integer,
                         self.x - 80 * indent + 80 * index,
                         self.y,

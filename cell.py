@@ -2,7 +2,7 @@
 import os
 import pyglet
 from pyglet import text, image, resource, sprite
-from utility import *
+from utility import createBorder
 
 
 class Cell:

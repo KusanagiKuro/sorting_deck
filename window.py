@@ -1,12 +1,10 @@
 #!usr#!/usr/bin/env python3
 import os
 import pyglet
-from math import floor
+from cellgroup import *
 from pyglet import text, image, resource, sprite
-from pyglet.window import Window, key
 from utility import *
 from cell import *
-from cellgroup import *
 
 
 class Window(pyglet.window.Window):

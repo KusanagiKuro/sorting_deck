@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-import pyglet
-from pyglet import *
-from pyglet import text, image, resource, sprite
+from pyglet import resource, sprite
 
 
 def swap(lst, first, second):

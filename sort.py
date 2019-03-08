@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import os
-from utility import *
+from utility import swap, makeCommand
 
 
 def bubbleSort(lst, commandList):
@@ -29,7 +29,7 @@ def bubbleSort(lst, commandList):
                                                result))
         commandList.append(makeCommand("Lock", size - firstCounter))
     print("\n".join(str(command) for command in commandList))
-    return True if not gui else commandList
+    return commandList
 
 
 def insertionSort(lst, commandList):
@@ -48,7 +48,7 @@ def insertionSort(lst, commandList):
         lst[count + 1] = key
         if check:
             print(*lst)
-    return True if not gui else commandList
+    return commandList
 
 
 def quickSortCall(lst, commandList):
@@ -58,7 +58,7 @@ def quickSortCall(lst, commandList):
     return quickSort(lst, 0, len(lst) - 1, commandList)
 
 
-def quickSort(lst, start, end):
+def quickSort(lst, start, end, commandList):
     """
     Quick Sort Algorithm
     """
@@ -90,9 +90,9 @@ def quickSort(lst, start, end):
         print('P:', pivot)
         print(*lst)
         # Apply quick sort for the two parts
-        quickSort(lst, start, left - 2)
-        quickSort(lst, left, end)
-    return True if not gui else commandList
+        quickSort(lst, start, left - 2, commandList)
+        quickSort(lst, left, end, commandList)
+    return commandList
 
 
 def mergeSort(lst, commandList):
@@ -104,8 +104,8 @@ def mergeSort(lst, commandList):
         mid = len(lst) // 2
         leftHalf = lst[:mid]
         rightHalf = lst[mid:]
-        mergeSort(leftHalf)
-        mergeSort(rightHalf)
+        mergeSort(leftHalf, commandList)
+        mergeSort(rightHalf, commandList)
         i = j = k = 0
         # After the merge sort of the two halves, merge them
         while i < len(leftHalf) and j < len(rightHalf):
