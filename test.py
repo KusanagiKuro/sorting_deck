@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-import sys
+import argparse
+from sort import *
+from utility import *
+from GUI import *
 
-texture = resource.texture("square.png")
-texture.anchor_x = texture.width // 2
-texture.anchor_y = texture.height // 2
-self.window = pyglet.window.Window(1280, 720, visible=False,
-                                   resizable=False,
-                                   style=Window.WINDOW_STYLE_DIALOG,
-                                   caption="Visualisator")
+commands = [("CreateList", [[1, 2, 3123, 4, 5, 612, 71231, 8, 9, 10, 11, 12, 13, 14, 15]]),
+            ("Compare", [0, 2])]
+
+GUI(commands[::-1])

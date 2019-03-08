@@ -9,7 +9,7 @@ from cell import *
 
 
 class CellList:
-    sizeDict = {1: 50, 2: 28, 3: 24, 4: 20, 5: 16, 6: 14, 7: 12, 8: 10}
+    sizeDict = {1: 54, 2: 32, 3: 28, 4: 24, 5: 16, 6: 12, 7: 8, 8: 6}
 
     def __init__(self, lst, x, y):
         self.cells = []
@@ -23,7 +23,7 @@ class CellList:
         maxsize = CellList.sizeDict.get(len(max(stringList, key=len)), 8)
         for index, integer in enumerate(self.lst):
             cell = Cell(integer,
-                        self.x - 72 * indent + 72 * index,
+                        self.x - 80 * indent + 80 * index,
                         self.y,
                         maxsize,
                         index)
@@ -37,3 +37,6 @@ class CellList:
     def draw(self):
         for cell in self.cells:
             cell.draw()
+
+    def updateCellStatus(self, index, status):
+        self.cells[index].updateStatus(status)

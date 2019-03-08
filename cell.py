@@ -27,19 +27,20 @@ class Cell:
         self.y = y
 
         # How fast it travels on the screen
-        self.speed = 8
+        self.speed = 4
 
         # The direction it's moving
         self.vectorX = 0
         self.vectorY = 0
 
         # Setup the index label, anchor point is its center
-        self.indexlabel = text.Label("a["+str(index)+"]",
+        self.indexlabel = text.Label(str(index),
                                      font_name="Arial",
-                                     font_size=12,
-                                     color=(255, 255, 255, 255),
+                                     font_size=8,
+                                     color=(255, 255, 0, 255),
                                      anchor_x="center",
-                                     anchor_y="center")
+                                     anchor_y="center",
+                                     bold=True)
 
         # Setup the integer label, anchor point is its center
         self.label = text.Label(str(number),
@@ -51,11 +52,8 @@ class Cell:
 
         # Setup the border by loading an image and set it anchor point to the
         # center of the image
-        texture = resource.texture("square.png")
-        texture.anchor_x = texture.width // 2
-        texture.anchor_y = texture.height // 2
-        self.border = sprite.Sprite(texture)
-        self.border.scale = 72 / 64
+        self.border = createBorder()
+        self.border.scale = 80 / 1265 * 1.4
 
         # Setup the target list, which is where the cell will be moving
         # The order is next target = last element of the list
@@ -87,7 +85,7 @@ class Cell:
         self.label.x = self.x
         self.label.y = self.y + 2
         self.indexlabel.x = self.x
-        self.indexlabel.y = self.y + 43
+        self.indexlabel.y = self.y - 33
 
         # Check if it has reached the target, choose a next one if needed
         self.updateTarget()
@@ -133,19 +131,18 @@ class Cell:
 
     def updateStatus(self, status):
         """
-        Update the status of the cell, showed by changing the color of its
-        label
-        Input:  @status: string. Choose from "sorted", "compare", "unsorted"
+        Update the status of the cell, showed by changing the border
+        Input:  @status: string. Choose from "sorted", "compare", "locked"
         """
+        self.border.delete()
         if status == "sorted":
             # Green color for sorted
-            self.label.color = (0, 255, 0, 255)
-            self.indexlabel.color = (0, 255, 0, 255)
+            self.border = createBorder("sortedcircle.png")
         elif status == "compare":
             # Yellow color for being compared
-            self.label.color = (255, 255, 0, 255)
-            self.indexlabel.color = (255, 255, 0, 255)
+            self.border = createBorder("lockedcircle.png")
         elif status == "unsorted":
             # White color for unsorted
-            self.label.color = (255, 255, 255, 255)
-            self.indexlabel.color = (255, 255, 255, 255)
+            self.border = createBorder("circle.png")
+        self.border.scale = 80 / 1265 * 1.4
+        self.draw()

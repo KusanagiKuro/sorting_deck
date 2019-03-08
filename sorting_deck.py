@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 import argparse
-from bubblesort import *
-from quicksort import *
-from insertionsort import *
-from mergesort import *
+from sort import *
 from utility import *
+from GUI import *
 
 
 def createParser():
@@ -31,18 +29,17 @@ def main():
                 "insert": insertionSort,
                 "quick": quickSortCall,
                 "merge": mergeSort}
-    gui = None
+    commandList = algoDict[args.algo](args.integers, args.gui)
     if args.gui:
         if len(args.integers) > 15:
             print("Input too large")
-            return
+            return False
         else:
             import pyglet
-            gui = open("res/command.txt", "rw")
-    algoDict[args.algo](args.integers, args.gui)
-    if args.gui:
-        GUI()
+        commandList.append(makeCommand("Exit"))
+        GUI(commandList[::-1])
         gui.close()
+    return True
 
 
 if __name__ == "__main__":
