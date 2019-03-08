@@ -6,10 +6,10 @@ from pyglet import text, image, resource, sprite
 from pyglet.window import Window, key
 from utility import *
 from cell import *
-from celllist import *
+from cellgroup import *
 
 
-class MyWindow(pyglet.window.Window):
+class Window(pyglet.window.Window):
     def __init__(self, commandList, width=None, height=None, caption=None,
                  resizable=False, style=None, fullscreen=False,
                  visible=True, vsync=True, display=None,
@@ -18,7 +18,7 @@ class MyWindow(pyglet.window.Window):
                          visible, vsync, display, screen, config,
                          context, mode)
         self.commands = commandList
-        self.linkedList = []
+        self.groupList = []
         self.currentCellList = None
         background = resource.image("background.png")
         self.background = sprite.Sprite(background)
@@ -37,7 +37,7 @@ class MyWindow(pyglet.window.Window):
         self.clear()
         self.background.draw()
         self.glossaryBorder.draw()
-        for cellList in self.linkedList:
+        for cellList in self.groupList:
             cellList.draw()
 
     def on_key_press(self, symbol, modifier):
@@ -48,7 +48,7 @@ class MyWindow(pyglet.window.Window):
 
     def update(self, dt):
         self.executeNextCommand()
-        for cellList in self.linkedList:
+        for cellList in self.groupList:
             cellList.update(dt)
 
     def executeNextCommand(self):
@@ -66,8 +66,8 @@ class MyWindow(pyglet.window.Window):
 
     def createList(self, lst):
         newCellList = CellList(lst[0], (self.width - 150) // 2,
-                               self.height - 150 * (len(self.linkedList) + 1))
-        self.linkedList.append(newCellList)
+                               self.height - 150 * (len(self.groupList) + 1))
+        self.groupList.append(newCellList)
         self.currentCellList = newCellList
 
     def lockCell(self, lst):

@@ -5,7 +5,7 @@ from math import floor
 from pyglet import text, image, resource, sprite
 from pyglet.window import Window, key
 from utility import *
-from mywindow import *
+from window import *
 from cell import *
 from celllist import *
 
@@ -25,9 +25,9 @@ def GUI(commandList):
     resource.reindex()
     pyglet.gl.glClearColor(0.5, 0, 0, 1)
     print(commandList)
-    window = MyWindow(commandList, resizable=False,
-                      caption="Visualisator",
-                      fullscreen=True)
+    window = Window(commandList, resizable=False,
+                    caption="Visualisator",
+                    fullscreen=True)
 
-    pyglet.clock.schedule_interval(window.update, 1/120.0)
+    pyglet.clock.schedule_interval(window.update, 1/60.0)
     pyglet.app.run()

@@ -1,9 +1,7 @@
 #!usr#!/usr/bin/env python3
 import os
 import pyglet
-from math import floor
 from pyglet import text, image, resource, sprite
-from pyglet.window import Window, key
 from utility import *
 
 
@@ -27,7 +25,7 @@ class Cell:
         self.y = y
 
         # How fast it travels on the screen
-        self.speed = 4
+        self.speed = 8
 
         # The direction it's moving
         self.vectorX = 0
