@@ -39,13 +39,6 @@ class CellGroup:
                            maxsize,
                            index)
                       for index, integer in enumerate(lst)]
-        for index, integer in enumerate(lst):
-            cell = Cell(integer,
-                        self.x - 80 * indent + 80 * index,
-                        self.y,
-                        maxsize,
-                        index)
-            self.cells.append(cell)
         pass
 
     def update(self, dt):
