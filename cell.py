@@ -1,8 +1,20 @@
 #!usr#!/usr/bin/env python3
 import os
 import pyglet
+from math import floor
 from pyglet import text, image, resource, sprite
 from utility import createBorder
+
+
+def swap(cell1, cell2):
+    cell1.addTarget([(cell2.x, cell2.y),
+                     (cell2.x, cell2.y + 80)
+                     (cell1.x, cell2.y + 80)])
+    cell2.addTarget([(cell1.x, cell1.y),
+                     (cell1.x, cell1.y - 80)
+                     (cell2.x, cell1.y - 80)])
+    swapValue(cell1.indexlabel.text, cell2.indexlabel.text)
+    return True
 
 
 class Cell:
@@ -11,7 +23,7 @@ class Cell:
     Contains a border, a label representing the number and a label representing
     its index inside the list
     """
-    def __init__(self, number, x, y, fontSize, index):
+    def __init__(self, number, x, y, fontSize, index, border=None):
         """
         Initialize the object
         Input:  @number: integer, the number inside the cell
@@ -25,14 +37,15 @@ class Cell:
         self.y = y
 
         # How fast it travels on the screen
-        self.speed = 8
+        self.speed = 0
 
         # The direction it's moving
         self.vectorX = 0
         self.vectorY = 0
 
         # Setup the index label, anchor point is its center
-        self.indexlabel = text.Label(str(index),
+        self.index = index
+        self.indexlabel = text.Label(str(self.index) if index >= 0 else "",
                                      font_name="Arial",
                                      font_size=8,
                                      color=(255, 255, 0, 255),
@@ -50,7 +63,7 @@ class Cell:
 
         # Setup the border by loading an image and set it anchor point to the
         # center of the image
-        self.border = createBorder()
+        self.border = createBorder() if not border else createBorder(border)
         self.border.scale = 80 / 1265 * 1.4
 
         # Setup the target list, which is where the cell will be moving
@@ -96,51 +109,70 @@ class Cell:
         self.border.draw()
         self.label.draw()
         self.indexlabel.draw()
+        self.update(0)
 
     def updateTarget(self):
         """
-        If the cell has reached its movement's target, get the next one if
-        needed
+        If the cell has reached its target, get the next one if the target list
+        isn't empty
         """
-        if (self.x, self.y) == self.currentTarget:
-            self.vectorX = 0
-            self.vectorY = 0
-            self.currentTarget = None
-            if self.targetList:
-                self.currentTarget = self.targetList.pop()
-                self.getDirection()
+        if not self.currentTarget and self.targetList:
+            self.currentTarget = self.targetList.pop()
+        self.getDirection()
 
     def getDirection(self):
         """
         Get the direction for the cell to move to its target
         """
-        if self.currentTarget[0] > self.x:
+        print(self.currentTarget)
+        if not self.currentTarget:
+            self.vectorX = 0
+            self.vectorY = 0
+        elif self.currentTarget[0] > self.x:
             # Move Right
             self.vectorX = 1
+            self.speed = floor(abs(self.currentTarget[0] - self.x) / 30)
         elif self.currentTarget[0] < self.x:
             # Move Left
             self.vectorX = -1
+            self.speed = floor(abs(self.currentTarget[0] - self.x) / 30)
         elif self.currentTarget[1] > self.y:
             # Move Up
             self.vectorY = 1
+            self.speed = floor(abs(self.currentTarget[1] - self.y) / 30)
         elif self.currentTarget[1] < self.y:
             # Move Down
             self.vectorY = -1
+            self.speed = floor(abs(self.currentTarget[1] - self.y) / 30)
 
     def updateStatus(self, status):
         """
         Update the status of the cell, showed by changing the border
         Input:  @status: string. Choose from "sorted", "compare", "locked"
         """
-        self.border.delete()
         if status == "sorted":
-            # Green color for sorted
+            self.border.delete()
             self.border = createBorder("sortedcircle.png")
+            self.border.scale = 80 / 1265 * 1.4
         elif status == "compare":
-            # Yellow color for being compared
-            self.border = createBorder("lockedcircle.png")
+            self.targetList.append((self.x, self.y + 90))
         elif status == "unsorted":
-            # White color for unsorted
+            self.border.delete()
             self.border = createBorder("circle.png")
-        self.border.scale = 80 / 1265 * 1.4
+            self.border.scale = 80 / 1265 * 1.4
         self.draw()
+
+    def addTarget(self, targets):
+        """
+        Add targets to the cell's target list
+        Input: @targets: list of tuple of 2 integers, representing the x y
+                         coordinate of the target
+        """
+        self.targetList += targets
+        return True
+
+    def getValue(self):
+        return self.label.text
+
+    def getIndex(self):
+        return self.indexlabel.text

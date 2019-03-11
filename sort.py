@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import os
-from utility import swap, makeCommand
+from utility import swapValue, makeCommand
 
 
 def bubbleSort(lst, commandList):
@@ -8,27 +8,40 @@ def bubbleSort(lst, commandList):
     Bubble Sort Algorithm
     """
     size = len(lst)
-    commandList = [makeCommand("CreateList", lst)]
+
+    # Write down command CreateList
+    commandList = [makeCommand("Create", lst)]
+
+    # Run through the list n time, the index of the loop is the firstCounter
     for firstCounter in range(size):
+
+        # For each time, run through firstCounter - 1 elements
+        # and compare them with the next element.
         for secondCounter in range(size - firstCounter - 1):
-            commandList.append(makeCommand("Compare", secondCounter,
-                                           secondCounter + 1))
+            commandList.append(makeCommand("Compare",
+                                           secondCounter,
+                                           secondCounter + 1,
+                                           lst[secondCounter],
+                                           lst[secondCounter + 1]))
+            # If those
             if lst[secondCounter] > lst[secondCounter + 1]:
                 commandList.append(makeCommand("Result", secondCounter,
                                                secondCounter + 1,
-                                               "greater"))
+                                               "greater than"))
                 commandList.append(makeCommand("Swap", secondCounter,
                                                secondCounter + 1))
-                swap(lst, secondCounter, secondCounter + 1)
+                swapValue(lst[secondCounter], lst[secondCounter + 1])
                 print(*lst)
             else:
-                result = ("less" if lst[secondCounter] < lst[secondCounter + 1]
-                          else "equal")
+                result = ("less than"
+                          if lst[secondCounter] < lst[secondCounter + 1]
+                          else "equal to")
                 commandList.append(makeCommand("Result", secondCounter,
                                                secondCounter + 1,
                                                result))
+            commandList.append(makeCommand("Return", secondCounter,
+                                           secondCounter + 1))
         commandList.append(makeCommand("Lock", size - firstCounter))
-    print("\n".join(str(command) for command in commandList))
     return commandList
 
 
@@ -74,7 +87,7 @@ def quickSort(lst, start, end, commandList):
             # If left value > pivot > right value
             # Swap the left and right value
             if lst[left] > pivot > lst[right]:
-                swap(lst, left, right)
+                swapValue(lst[left], lst[right])
 
             # Raise left counter if left value <= pivot
             if lst[left] <= pivot:
@@ -86,7 +99,7 @@ def quickSort(lst, start, end, commandList):
 
         # Swap the pivot to its right location (which is indicated by the left
         # counter)
-        swap(lst, start, left - 1)
+        swapValue(lst[start], lst[left - 1])
         print('P:', pivot)
         print(*lst)
         # Apply quick sort for the two parts
