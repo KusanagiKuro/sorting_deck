@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-from command import *
+from command import addCommand
+from utility import compareValueInList
 
 
 def mergeSortInPlaceCall(lst, commandList):
@@ -24,8 +25,7 @@ def mergeSortInPlace(lst, start, end, commandList):
     if start < end - 1:
         # Define the split point
         mid = start + (end - start) // 2
-        makeCommand(commandList, "Split",
-                    start, mid, end)
+        addCommand(commandList, "Split", start, mid, end)
 
         # Using merge sort on the two halves.
         mergeSortInPlace(lst, start, mid, commandList)
@@ -50,30 +50,32 @@ def mergeInPlace(lst, start, end, mid, commandList):
     if start >= end - 1:
         return
 
-    makeCommand(commandList, "UpdateStatus",
-                [index for index in range(len(lst))
-                 if index < start or index >= end],
-                "locked")
+    addCommand(commandList, "UpdateStatus",
+               [index for index in range(len(lst))
+                if index < start or index >= end],
+               "locked")
 
     # Mark the starting index of the second part. It will start at the split
     # point.
     start2 = mid
-    if lst[start2 - 1] <= lst[start2]:
-        makeCommand(commandList, "UpdateStatus",
-                    [index for index in range(len(lst))
-                     if index < start or index >= end],
-                    "normal")
+    if compareValueInList(lst, commandList, start2 - 1, start2,
+                          lst[start2 - 1], lst[start2],
+                          "lst[mid - 1] <= lst[mid]?"):
+        addCommand(commandList, "UpdateStatus",
+                   [index for index in range(len(lst))
+                    if index < start or index >= end - 1],
+                   "normal")
         return
-
+    addCommand(commandList, "UpdateStatus", [start2, start2 - 1], "normal")
     # Start rearranging the elements between the two parts until one of them
     # meet their end.
     while start < mid and start2 < end:
         start, start2, mid = rearrangeInPlace(lst, start, start2,
                                               mid, commandList)
-    makeCommand(commandList, "UpdateStatus",
-                [index for index in range(len(lst))
-                 if index < start or index >= end],
-                "normal")
+    addCommand(commandList, "UpdateStatus",
+               [index for index in range(len(lst))
+                if index < start or index >= end - 1],
+               "normal")
 
 
 def rearrangeInPlace(lst, start, start2, mid, commandList):
@@ -92,22 +94,21 @@ def rearrangeInPlace(lst, start, start2, mid, commandList):
            @start2: The next index that needs to be checked for the second part
            @mid: The new split point of the two parts
     """
-    makeCommand(commandList, "Compare", start, start2, lst[start],
-                lst[start2], "lst[left] <= lst[right]?")
     # Compare the two elements, if the 1st one is greater, move to the next
     # element of the 1st part.
-    if lst[start] <= lst[start2]:
-        makeCommand(commandList, "UpdateStatus", [start, start2],
-                    "normal")
+    if compareValueInList(lst, commandList, start, start2, lst[start],
+                          lst[start2], "lst[left] <= lst[right]?"):
+        addCommand(commandList, "UpdateStatus", [start, start2],
+                   "normal")
         start += 1
 
     # Else
     else:
         # Store the current index and value of the 2nd element
         value, index = lst[start2], start2
-        makeCommand(commandList, "UpdateStatus", [start],
-                    "normal")
-        makeCommand(commandList, "Shift", start2, start)
+        addCommand(commandList, "UpdateStatus", [start],
+                   "normal")
+        addCommand(commandList, "Shift", start2, start)
 
         # Shift all elements between the 1st and the 2nd to the right.
         # (Including the 1st, but not the 2nd)
@@ -120,7 +121,7 @@ def rearrangeInPlace(lst, start, start2, mid, commandList):
         lst[start] = value
 
         # Move the marker to the next element, as well as push the split point
-        # to the right.
+        # between two halves to the right by 1.
         start += 1
         mid += 1
         start2 += 1

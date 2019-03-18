@@ -1,7 +1,6 @@
 #!usr#!/usr/bin/env python3
-import pyglet
 from math import floor
-from pyglet import text, resource, sprite
+from pyglet import text
 from utility import createCellBorder
 
 
@@ -69,12 +68,11 @@ class Cell:
         # Current target
         self.currentTarget = None
 
-    def update(self, dt):
+    def update(self):
         """
         Update the object's coordinate
 
-        Input:  @dt: tick of the clock. Passed by the schedule_interval.
-                @listVectorX: integer, horizontal movement of the list.
+        Input:  @listVectorX: integer, horizontal movement of the list.
                 @listVectorY: integer, vertical movement of the list.
         """
         # If the list is moving, update the cell's coordinate accordingly
@@ -114,7 +112,7 @@ class Cell:
         self.border.draw()
         self.label.draw()
         self.indexLabel.draw()
-        self.update(0)
+        self.update()
 
     def getNewTarget(self):
         """
@@ -130,19 +128,19 @@ class Cell:
         if self.currentTarget[0] > self.x:
             # Move Right
             self.vectorX = 1
-            self.speed = floor(abs(self.currentTarget[0] - self.x) / 48)
+            self.speed = floor(abs(self.currentTarget[0] - self.x) / 30)
         elif self.currentTarget[0] < self.x:
             # Move Left
             self.vectorX = -1
-            self.speed = floor(abs(self.currentTarget[0] - self.x) / 48)
+            self.speed = floor(abs(self.currentTarget[0] - self.x) / 30)
         elif self.currentTarget[1] > self.y:
             # Move Up
             self.vectorY = 1
-            self.speed = floor(abs(self.currentTarget[1] - self.y) / 48)
+            self.speed = floor(abs(self.currentTarget[1] - self.y) / 30)
         elif self.currentTarget[1] < self.y:
             # Move Down
             self.vectorY = -1
-            self.speed = floor(abs(self.currentTarget[1] - self.y) / 48)
+            self.speed = floor(abs(self.currentTarget[1] - self.y) / 30)
 
     def moveRightby1(self):
         """
@@ -242,7 +240,7 @@ class Cell:
         """
         self.border = createCellBorder(border)
         self.border.draw()
-        self.update(0)
+        self.update()
 
     def setStatus(self, status):
         """
@@ -251,8 +249,7 @@ class Cell:
         Input:  @status: string.
         """
         # Dictionary contains all the borders according to the status
-        borderDict = {"sorted": "sortedcircle.png",
-                      "compare": "tealcircle.png",
+        borderDict = {"compare": "tealcircle.png",
                       "normal": "circle.png",
                       "confirmed": "greencircle.png",
                       "mark": "purplecircle.png",

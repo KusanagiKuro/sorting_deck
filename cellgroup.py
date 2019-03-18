@@ -1,8 +1,6 @@
 #!usr#!/usr/bin/env python3
-import os
-import pyglet
-from pyglet import text, image, resource, sprite
-from cell import *
+from pyglet import text
+from cell import Cell
 
 
 class CellGroup:
@@ -30,19 +28,19 @@ class CellGroup:
         self.vectorY = 0
 
         # Create the cells.
-        indent = len(lst) / 2
+        self.indent = len(lst) / 2
         stringList = [str(integer) for integer in lst]
         maxsize = CellGroup.sizeDict.get(len(max(stringList, key=len)), 8)
         self.cells = [Cell(self,
                            integer,
-                           self.x - 96 * indent + 96 * index,
+                           self.x - 96 * self.indent + 96 * index,
                            self.y,
                            maxsize,
                            index)
                       for index, integer in enumerate(lst)]
 
-    def update(self, dt):
-        return any([cell.update(dt) for cell in self.cells])
+    def update(self):
+        return any([cell.update() for cell in self.cells])
 
     def draw(self):
         for cell in self.cells:
@@ -66,16 +64,15 @@ class CellGroup:
 
         Input: @lst: list of 2 tuples, representing the index of the cells.
         """
-        if lst[0] != lst[1]:
-            cell1 = self.cells[lst[0]]
-            cell2 = self.cells[lst[1]]
-            targetList1 = [(cell2.x, cell1.y)]
-            cell1.addTarget([(cell2.x, cell1.y)])
-            cell2.addTarget([(cell1.x, cell2.y)])
-            cell1.setIndex(lst[1])
-            cell2.setIndex(lst[0])
-            self.cells[lst[0]] = cell2
-            self.cells[lst[1]] = cell1
+        cell1 = self.cells[lst[0]]
+        cell2 = self.cells[lst[1]]
+        targetList1 = [(cell2.x, cell1.y)]
+        cell1.addTarget([(cell2.x, cell1.y)])
+        cell2.addTarget([(cell1.x, cell2.y)])
+        cell1.setIndex(lst[1])
+        cell2.setIndex(lst[0])
+        self.cells[lst[0]] = cell2
+        self.cells[lst[1]] = cell1
 
     def shiftCells(self, lst):
         """

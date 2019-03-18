@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-from command import *
-from utility import swapValueInList
+from command import addCommand
+from utility import swapValueInList, compareValueInList
 
 
 def compareInPair(lst, index, commandList):
@@ -16,14 +16,10 @@ def compareInPair(lst, index, commandList):
 
     # Loop through each element in a certain range.
     for index2 in range(len(lst) - index - 1):
-        makeCommand(commandList, "Compare",
-                    index2,
-                    index2 + 1,
-                    lst[index2],
-                    lst[index2 + 1],
-                    "lst[n] > lst[n+1]?")
         # Compare that element with the element next to it.
-        if lst[index2] > lst[index2 + 1]:
+        if compareValueInList(lst, commandList, index2, index2 + 1,
+                              lst[index2], lst[index2 + 1],
+                              "lst[n] > lst[n+1]?"):
             # If it's greater, swap them.
             swapValueInList(lst, index2, index2 + 1, commandList)
 
@@ -32,9 +28,9 @@ def compareInPair(lst, index, commandList):
 
             # Print out the list
             print(*lst)
-        makeCommand(commandList, "UpdateStatus", [index2, index2 + 1],
-                    "normal")
-    makeCommand(commandList, "UpdateStatus", [len(lst) - 1 - index], "locked")
+        addCommand(commandList, "UpdateStatus", [index2, index2 + 1],
+                   "normal")
+    addCommand(commandList, "UpdateStatus", [len(lst) - 1 - index], "locked")
     return check
 
 

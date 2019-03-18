@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-from command import *
+from command import addCommand
+from utility import compareValueInList
 
 
 def insert(lst, index, commandList):
@@ -20,34 +21,39 @@ def insert(lst, index, commandList):
 
     # Loop backward from the previous index to the start of the list
     for index2 in range(index - 1, -2, -1):
-        if index2 >= 0:
-            makeCommand(commandList, "Compare", index, index2,
-                        key, lst[index2], "Key < lst[index2]?")
-            makeCommand(commandList, "UpdateStatus", [index, index2],
-                        "normal")
+        if index2 < 0:
+            break
 
         # If the value of the index is less than the value of the key
-        if key < lst[index2] and index2 >= 0:
+        if compareValueInList(lst, commandList, index, index2,
+                              key, lst[index2], "Key < lst[index]?"):
 
             # Shift the value of the index to the right
             lst[index2 + 1] = lst[index2]
             check = True
+            addCommand(commandList, "UpdateStatus", [index, index2],
+                       "normal")
 
         # Else end the loop
         else:
+            addCommand(commandList, "UpdateStatus", [index, index2],
+                       "normal")
             break
     # Set the key to its correct position
     if check:
-        makeCommand(commandList, "Shift", index, index2 + 1)
+        addCommand(commandList, "Shift", index, index2 + 1)
         lst[index2 + 1] = key
     else:
-        makeCommand(commandList, "UpdateStatus", [index], "normal")
+        addCommand(commandList, "UpdateStatus", [index], "normal")
     return check
 
 
 def insertionSort(lst, commandList):
     """
     Insertion Sort Algorithm
+
+    Input: @lst: List of integers that we need to sort.
+           @commandList: List. The list of commands that the GUI will run on
     """
     # Loop through the list from index 1 to the end
     for index in range(1, len(lst)):

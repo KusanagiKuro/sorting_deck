@@ -1,14 +1,43 @@
 #!/usr/bin/env python3
 from pyglet import sprite, resource
+from command import addCommand
+import operator
+
+
+def compareValueInList(lst, commandList, index1, index2, value1, value2,
+                       condition):
+    """
+    Compare value in list and write a compare command accordingly
+
+    Input: @lst: List of integers that we need to sort.
+           @commandList: List. The list of commands that the GUI will run on
+           @index1: integer. The index of the 1st number
+           @index2: integer. The index of the 2nd number
+           @value1: integer. The value of the 1st number
+           @value2: integer. The value of the 2nd number
+           @condition: string. The condition that we are checking.
+    """
+    conditionDict = {"<": operator.lt,
+                     ">": operator.gt,
+                     "=": operator.eq,
+                     ">=": operator.ge,
+                     "<=": operator.le}
+    addCommand(commandList, "Compare", index1, index2,
+               value1, value2, condition)
+    for key in conditionDict.keys():
+        if key in condition.split():
+            return conditionDict[key](value1, value2)
 
 
 def swapValueInList(lst, index1, index2, commandList):
     """
     Swap value between two elements of a lst if the first is higher
     """
-    makeCommand(commandList, "Swap", index2, index2 + 1)
-    lst[index1], lst[index2] = lst[index2], lst[index1]
-    return True
+    if index1 != index2:
+        addCommand(commandList, "Swap", index1, index2)
+        lst[index1], lst[index2] = lst[index2], lst[index1]
+        return True
+    return False
 
 
 def createSprite(path="circle.png"):
